@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Game
 {
@@ -17,6 +18,11 @@ namespace Game
                 return null;
             }
             return _players[playerType];
+        }
+
+        public bool IsGameOver()
+        {
+            return _players.Values.Any(p => p.IsDead());
         }
     }
 }

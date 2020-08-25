@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Game
 {
     public class GameRoundFactory
     {
+        [NotNull]
         public static GameRoundModel Create(GameType gameType, Data gameSettings)
         {
             bool withBuffs = gameType == GameType.WITH_BUFFS;
@@ -19,6 +21,7 @@ namespace Game
             return result;
         }
 
+        [NotNull]
         private static PlayerModel CreatePlayerModel(Data gameSettings, PlayerType playerType, bool withBuffs)
         {
             PlayerModel playerModel = new PlayerModel(playerType, gameSettings.stats);
@@ -45,6 +48,7 @@ namespace Game
          * TODO: Сделать тесты если время останется
          */
         
+        [NotNull]
         private static List<Buff> CreateListOfUniqueBuffs(int buffsCount, Data gameSettings)
         {
             Buff[] gameSettingsBuffs = gameSettings.buffs;
@@ -58,6 +62,7 @@ namespace Game
             return shuffledBuffs.ToList().GetRange(0, buffsCount);
         }
 
+        [NotNull]
         private static List<Buff> CreateListOfDuplicatedBuffs(int buffsCount, Data gameSettings)
         {
             Buff[] gameSettingsBuffs = gameSettings.buffs;
@@ -82,11 +87,6 @@ namespace Game
                 default:
                     return PlayerType.PLAYER_2;
             }
-        }
-
-        private static PlayerModel CreatePlayerModel(PlayerType playerType, Stat[] initialStats)
-        {
-            return new PlayerModel(playerType, initialStats);
         }
     }
 }

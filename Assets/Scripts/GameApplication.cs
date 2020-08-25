@@ -23,7 +23,7 @@ namespace Game
 
         private void CollectGameContext()
         {
-            _gameViewContext = new GameViewContext();
+            _gameViewContext = GetComponent<GameViewContext>();
         }
 
         private void CreateGameRoundController()

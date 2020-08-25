@@ -5,7 +5,7 @@ namespace Game
 {
     public class GameRoundModel
     {
-        private Dictionary<PlayerType, PlayerModel> _players;
+        private readonly Dictionary<PlayerType, PlayerModel> _players = new Dictionary<PlayerType, PlayerModel>();
 
         public void AddPlayer(PlayerType playerType, PlayerModel playerModel)
         {

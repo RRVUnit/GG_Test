@@ -15,7 +15,7 @@ namespace Game
         private readonly PlayerType _playerType;
         private readonly Stat[] _initialStats;
 
-        private List<Buff> _buffs;
+        private List<Buff> _buffs = new List<Buff>();
 
         private int _hp;
         

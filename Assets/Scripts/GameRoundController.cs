@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace Game
 {
     public class GameRoundController
@@ -11,6 +14,32 @@ namespace Game
         {
             _gameViewContext = gameViewContext;
             _dataConfig = dataConfig;
+
+            AddGameControls();
+            AddPlayerControls();
+        }
+
+        private void AddGameControls()
+        {
+            
+        }
+
+        private void AddPlayerControls()
+        {
+            List<PlayerView> playerViews = _gameViewContext.PlayerViews;
+            playerViews.ForEach(BindControls);
+        }
+
+        private void BindControls(PlayerView playerView)
+        {
+            playerView.panelHierarchy.attackButton.onClick.AddListener(() => {
+                OnAttackButtonClicked(playerView.playerType);
+            });
+        }
+
+        private void OnAttackButtonClicked(PlayerType playerType)
+        {
+            Debug.Log("Attack clicked" + playerType);
         }
 
         public void StartRound(GameRoundModel roundModel)

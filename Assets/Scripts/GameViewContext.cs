@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -8,15 +9,28 @@ namespace Game
     {
         [SerializeField]
         public List<PlayerView> PlayerViews;
+        
+        [SerializeField]
+        public List<GameTypeControl> GameTypeControls;
     }
 
     [Serializable]
     public struct PlayerView
     {
         [SerializeField]
-        public PlayerType playerType;
+        public PlayerType PlayerType;
         
         [SerializeField]
-        public PlayerPanelHierarchy panelHierarchy;
+        public PlayerPanelHierarchy PanelHierarchy;
+    }
+    
+    [Serializable]
+    public struct GameTypeControl
+    {
+        [SerializeField]
+        public GameType GameType;
+        
+        [SerializeField]
+        public Button GameTypeButton;
     }
 }

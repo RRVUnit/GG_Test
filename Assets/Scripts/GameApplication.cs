@@ -33,13 +33,7 @@ namespace Game
         
         private void StartDefaultGame()
         {
-            CreateRound(GameType.WITH_BUFFS);
-        }
-
-        private void CreateRound(GameType gameType)
-        {
-            GameRoundModel gameRoundModel = GameRoundFactory.Create(gameType, _dataConfig);
-            _gameRoundController.StartRound(gameRoundModel);
+            _gameRoundController.CreateRound(GameType.WITH_BUFFS);
         }
 
         private void LoadDataConfig()

@@ -21,7 +21,14 @@ namespace Game
 
         private void AddGameControls()
         {
-            
+            List<GameTypeControl> gameTypeControls = _gameViewContext.GameTypeControls;
+            gameTypeControls.ForEach(gc => gc.GameTypeButton.onClick.AddListener(() => { OnGameModeChanged(gc.GameType); }));
+        }
+
+        private void OnGameModeChanged(GameType gameType)
+        {
+            Debug.Log("GameType changed: " + gameType);
+            CreateRound(gameType);
         }
 
         private void AddPlayerControls()
@@ -32,8 +39,8 @@ namespace Game
 
         private void BindControls(PlayerView playerView)
         {
-            playerView.panelHierarchy.attackButton.onClick.AddListener(() => {
-                OnAttackButtonClicked(playerView.playerType);
+            playerView.PanelHierarchy.attackButton.onClick.AddListener(() => {
+                OnAttackButtonClicked(playerView.PlayerType);
             });
         }
 
@@ -59,6 +66,12 @@ namespace Game
         private void ResetRound()
         {
             
+        }
+
+        public void CreateRound(GameType gameType)
+        {
+            GameRoundModel gameRoundModel = GameRoundFactory.Create(gameType, _dataConfig);
+            StartRound(gameRoundModel);
         }
     }
 }

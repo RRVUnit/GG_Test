@@ -715,10 +715,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerViews:
-  - playerType: 0
-    panelHierarchy: {fileID: 1828838845}
-  - playerType: 1
-    panelHierarchy: {fileID: 257483471}
+  - PlayerType: 0
+    PanelHierarchy: {fileID: 1828838845}
+  - PlayerType: 1
+    PanelHierarchy: {fileID: 257483471}
+  GameTypeControls:
+  - GameType: 0
+    GameTypeButton: {fileID: 1965814805}
+  - GameType: 1
+    GameTypeButton: {fileID: 1876949749}
 --- !u!1 &871526791
 GameObject:
   m_ObjectHideFlags: 0
@@ -1335,6 +1340,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa5e33bc1c733ce4b8b01d5d1858262f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1876949749 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114000011830530410, guid: 486e302ca293de54a8e5ca500d5d717d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2109196113}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1965814805 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114000011830530410, guid: 486e302ca293de54a8e5ca500d5d717d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1568522398}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &2109196113

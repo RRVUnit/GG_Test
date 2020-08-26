@@ -129,26 +129,26 @@ namespace Game
                 PlayerType playerType = playerController.PlayerType;
                 PlayerView playerView = _gameViewContext.GetPlayerView(playerType);
                 Transform panelsContainer = playerView.PanelHierarchy.statsPanel;
-                DrawStatPanels(playerController.PlayerModel, panelsContainer);
                 DrawBuffPanels(playerController.PlayerModel, panelsContainer);
+                DrawStatPanels(playerController.PlayerModel, panelsContainer);
             }
         }
 
         private void DrawBuffPanels(PlayerModel playerModel, Transform panelsContainer)
         {
             foreach (Stat stat in playerModel.CollectStats()) {
-                AddPanel(stat.icon, stat.value, panelsContainer);
+                AddPanel(stat.icon, stat.value.ToString(), panelsContainer);
             }
         }
 
         private void DrawStatPanels(PlayerModel playerModel, Transform panelsContainer)
         {
             foreach (Buff buff in playerModel.CollectBuffs()) {
-                AddPanel(buff.icon, 0, panelsContainer);
+                AddPanel(buff.icon, buff.title, panelsContainer);
             }
         }
 
-        private void AddPanel(string icon, float value, Transform container)
+        private void AddPanel(string icon, string value, Transform container)
         {
             StatPanelViewMediator statPanel = GameObject.Instantiate(_gameViewContext.StatPanel, container);
             statPanel.IconName = icon;

@@ -19,8 +19,8 @@ namespace Game
                 Icon.sprite = Resources.Load<Sprite>(iconPath);
             }
         }
-        public float Value {
-            set { Text.text = value.ToString(); }
+        public string Value {
+            set { Text.text = value; }
         }
     }
 }

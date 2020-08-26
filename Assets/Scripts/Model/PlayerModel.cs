@@ -65,7 +65,7 @@ namespace Game
 
         public Buff[] CollectBuffs()
         {
-            return new Buff[0];
+            return _buffs.ToArray();
         }
 
         public Stat[] CollectStats()

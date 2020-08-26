@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Game
@@ -66,8 +67,37 @@ namespace Game
 
         private void OnAttackButtonClicked(PlayerType playerType)
         {
-            Debug.Log("Attack clicked" + playerType);
-            GetPlayerController(playerType).Attack();
+            if (!CanAttack()) {
+                return;
+            }
+            
+            PlayerController playerController = GetPlayerController(playerType);
+            PlayerController enemyController = GetEnemyController(playerType);
+            
+            playerController.Attack();
+            
+            int hitAmount = CalculateHitAmount(playerController, enemyController);
+            enemyController.Hit(hitAmount);
+        }
+
+        private bool CanAttack()
+        {
+            return GameStarted() && !IsGameOver();
+        }
+
+        private bool GameStarted()
+        {
+            return _currentGameRoundModel != null;
+        }
+
+        private int CalculateHitAmount(PlayerController playerController, PlayerController enemyController)
+        {
+            return 10;
+        }
+
+        private PlayerController GetEnemyController(PlayerType playerType)
+        {
+            return _playerControllers.Values.First(pc => pc.PlayerType != playerType);
         }
 
         public void CreateRound(GameType gameType)
@@ -83,6 +113,16 @@ namespace Game
             ResetRound();
 
             DrawRoundSettings();
+
+            ApplyPlayerModelsToController(roundModel);
+        }
+
+        private void ApplyPlayerModelsToController(GameRoundModel roundModel)
+        {
+            foreach (PlayerType playerType in _playerControllers.Keys) {
+                PlayerModel model = roundModel.GetPlayerByType(playerType);
+                GetPlayerController(playerType).PlayerModel = model;
+            }
         }
 
         private void DrawRoundSettings()
@@ -104,6 +144,11 @@ namespace Game
         private void RemovePlayerStatPanels()
         {
             
+        }
+        
+        public bool IsGameOver()
+        {
+            return _playerControllers.Values.Any(p => p.PlayerModel.IsDead());
         }
     }
 }

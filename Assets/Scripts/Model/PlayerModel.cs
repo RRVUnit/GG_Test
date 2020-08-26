@@ -43,14 +43,24 @@ namespace Game
             _hp = Math.Max(0, _hp - hitAmount);
         }
 
+        public void RestoreHealth(int hpAmount)
+        {
+            _hp += hpAmount;
+        }
+        
         public bool IsDead()
         {
-            return _hp > 0;
+            return _hp <= 0;
         }
 
         public PlayerType PlayerType
         {
             get { return _playerType; }
+        }
+
+        public int HP
+        {
+            get { return _hp; }
         }
     }
 }

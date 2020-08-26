@@ -13,6 +13,8 @@ namespace Game
         private PlayerType _playerType;
         private readonly Animator _playerAnimator;
 
+        private PlayerModel _playerModel;
+
         public PlayerController(PlayerType playerType, Animator playerAnimator)
         {
             _playerType = playerType;
@@ -24,19 +26,77 @@ namespace Game
             get { return _playerType; }
         }
 
-        public void Hit(int hpAmount)
+        public void Hit(int hitAmount)
         {
+            PlayerModel.Hit(hitAmount);
             
+            Debug.Log(PlayerType + " HITTED: HP :" + PlayerModel.HP);
+            
+            CreateHitAmountLabel(hitAmount);
+            UpdateHPPanel();
+
+            if (PlayerModel.IsDead()) {
+                PlayDie();
+            }
         }
 
         public void Attack()
         {
+            PlayAttack();
+        }
+
+        public void RestoreHealth(int hpAmount)
+        {
+            PlayerModel.RestoreHealth(hpAmount);
+            CreateHpRestoreLabel(hpAmount);
+            UpdateHPPanel();
+        }
+        
+        private void UpdateHPPanel()
+        {
+            
+        }
+
+        private void CreateHitAmountLabel(int hitAmount)
+        {
+            
+        }
+        
+        private void CreateHpRestoreLabel(int hpAmount)
+        {
+            
+        }
+
+        private void PlayAttack()
+        {
             _playerAnimator.SetTrigger(ATTACK);
         }
 
-        public void Die()
+        private void PlayDie()
         {
-            _playerAnimator.SetInteger(HEALTH, 0);
+            UpdateHealthAnimationParam();
+        }
+        
+        public PlayerModel PlayerModel
+        {
+            get { return _playerModel; }
+            set
+            {
+                _playerModel = value;
+                UpdateDefaultValuesFromModel();
+            }
+        }
+
+        private void UpdateDefaultValuesFromModel()
+        {
+            CreateHpRestoreLabel(_playerModel.HP);
+
+            UpdateHealthAnimationParam();
+        }
+
+        private void UpdateHealthAnimationParam()
+        {
+            _playerAnimator.SetInteger(HEALTH, _playerModel.HP);
         }
     }
 }

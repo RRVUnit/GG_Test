@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 
 namespace Game
 {
@@ -34,6 +36,11 @@ namespace Game
         private void StartDefaultGame()
         {
             _gameRoundController.CreateRound(GameType.WITH_BUFFS);
+        }
+
+        private void Update()
+        {
+            _gameRoundController.Tick();
         }
 
         private void LoadDataConfig()

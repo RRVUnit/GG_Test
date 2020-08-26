@@ -20,6 +20,9 @@ namespace Game
         [SerializeField]
         public HealthBarViewMediator HealthPanel;
         
+        [SerializeField]
+        public GameObject HealthContainer;
+        
         public PlayerView GetPlayerView(PlayerType playerType)
         {
             return PlayerViews.First(pw => pw.PlayerType == playerType);

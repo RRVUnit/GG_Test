@@ -13,6 +13,8 @@ namespace Game
 
         private Dictionary<PlayerType, PlayerController> _playerControllers = new Dictionary<PlayerType, PlayerController>();
         
+        private Dictionary<HealthBarViewMediator, GameObject> _healthBarToPlayerCharacters = new Dictionary<HealthBarViewMediator, GameObject>();
+
         public GameRoundController(GameViewContext gameViewContext, Data dataConfig)
         {
             _gameViewContext = gameViewContext;
@@ -106,13 +108,24 @@ namespace Game
             StartRound(gameRoundModel);
         }
         
-        public void StartRound(GameRoundModel roundModel)
+        private void StartRound(GameRoundModel roundModel)
         {
             _currentGameRoundModel = roundModel;
 
             ResetRound();
             ApplyPlayerModelsToController(roundModel);
             DrawPlayersPanels();
+            CreatePlayerHealthBars();
+        }
+
+        private void CreatePlayerHealthBars()
+        {
+            foreach (PlayerType playerType in _playerControllers.Keys) {
+                GameObject playerObject = _gameViewContext.GetPlayerView(playerType).PanelHierarchy.character.gameObject;
+                HealthBarViewMediator healthBar = GameObject.Instantiate(_gameViewContext.HealthPanel, _gameViewContext.HealthContainer.transform);
+                GetPlayerController(playerType).HealthBar = healthBar;
+                _healthBarToPlayerCharacters.Add(healthBar, playerObject);
+            }
         }
 
         private void ApplyPlayerModelsToController(GameRoundModel roundModel)
@@ -172,6 +185,31 @@ namespace Game
         public bool IsGameOver()
         {
             return _playerControllers.Values.Any(p => p.PlayerModel.IsDead());
+        }
+
+        public void Tick()
+        {
+            UpdateHealthBarsPositions();
+        }
+
+        private void UpdateHealthBarsPositions()
+        {
+            foreach (KeyValuePair<HealthBarViewMediator, GameObject> valuePair in _healthBarToPlayerCharacters) {
+                UpdateHealthBarPosition(valuePair.Key, valuePair.Value);
+            }
+        }
+
+        private void UpdateHealthBarPosition(HealthBarViewMediator healthBar, GameObject character)
+        {
+            Vector3 characterPosition = character.transform.position;
+            characterPosition.z += 4;
+
+            RectTransform healthBarRect = healthBar.GetComponent<RectTransform>();
+ 
+            Vector2 ViewportPosition = Camera.main.WorldToViewportPoint(characterPosition);
+            
+            healthBarRect.anchorMin = ViewportPosition;
+            healthBarRect.anchorMax = ViewportPosition;
         }
     }
 }

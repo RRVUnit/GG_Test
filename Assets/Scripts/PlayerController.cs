@@ -86,6 +86,7 @@ namespace Game
                 UpdateDefaultValuesFromModel();
             }
         }
+        public HealthBarViewMediator HealthBar { get; set; }
 
         private void UpdateDefaultValuesFromModel()
         {

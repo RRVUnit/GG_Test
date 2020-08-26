@@ -23,6 +23,7 @@ namespace Game
             AddGameControls();
             AddPlayerControls();
             CreatePlayerControllers();
+            CreatePlayerHealthBars();
         }
 
         private void CreatePlayerControllers()
@@ -115,7 +116,6 @@ namespace Game
             ResetRound();
             ApplyPlayerModelsToController(roundModel);
             DrawPlayersPanels();
-            CreatePlayerHealthBars();
         }
 
         private void CreatePlayerHealthBars()

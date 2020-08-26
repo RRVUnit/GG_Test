@@ -15,6 +15,8 @@ namespace Game
 
         private PlayerModel _playerModel;
 
+        public HealthBarViewMediator HealthBar;
+        
         public PlayerController(PlayerType playerType, Animator playerAnimator)
         {
             _playerType = playerType;
@@ -54,17 +56,17 @@ namespace Game
         
         private void UpdateHPPanel()
         {
-            
+            HealthBar.Value = _playerModel.HP;
         }
 
         private void CreateHitAmountLabel(int hitAmount)
         {
-            
+            HealthBar.EmitHit(hitAmount);
         }
         
         private void CreateHpRestoreLabel(int hpAmount)
         {
-            
+            HealthBar.EmitHPRestore(hpAmount);
         }
 
         private void PlayAttack()
@@ -86,13 +88,16 @@ namespace Game
                 UpdateDefaultValuesFromModel();
             }
         }
-        public HealthBarViewMediator HealthBar { get; set; }
 
         private void UpdateDefaultValuesFromModel()
         {
             CreateHpRestoreLabel(_playerModel.HP);
 
             UpdateHealthAnimationParam();
+
+            HealthBar.MaxValue = _playerModel.HP;
+            
+            UpdateHPPanel();
         }
 
         private void UpdateHealthAnimationParam()

@@ -724,6 +724,10 @@ MonoBehaviour:
     GameTypeButton: {fileID: 1965814805}
   - GameType: 1
     GameTypeButton: {fileID: 1876949749}
+  StatPanel: {fileID: 5505385859198730263, guid: 77a89dfebc586d241992ad32394d6699,
+    type: 3}
+  HealthPanel: {fileID: 6776552567310994906, guid: 62c4624c182bca94e96863e926c37a5b,
+    type: 3}
 --- !u!1 &871526791
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,17 @@ namespace Game
         
         [SerializeField]
         public List<GameTypeControl> GameTypeControls;
+
+        [SerializeField]
+        public StatPanelViewMediator StatPanel;
+        
+        [SerializeField]
+        public HealthBarViewMediator HealthPanel;
+        
+        public PlayerView GetPlayerView(PlayerType playerType)
+        {
+            return PlayerViews.First(pw => pw.PlayerType == playerType);
+        }
     }
 
     [Serializable]

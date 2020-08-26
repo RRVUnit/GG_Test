@@ -111,10 +111,8 @@ namespace Game
             _currentGameRoundModel = roundModel;
 
             ResetRound();
-
-            DrawRoundSettings();
-
             ApplyPlayerModelsToController(roundModel);
+            DrawPlayersPanels();
         }
 
         private void ApplyPlayerModelsToController(GameRoundModel roundModel)
@@ -125,25 +123,50 @@ namespace Game
             }
         }
 
-        private void DrawRoundSettings()
+        private void DrawPlayersPanels()
         {
-            
+            foreach (PlayerController playerController in _playerControllers.Values) {
+                PlayerType playerType = playerController.PlayerType;
+                PlayerView playerView = _gameViewContext.GetPlayerView(playerType);
+                Transform panelsContainer = playerView.PanelHierarchy.statsPanel;
+                DrawStatPanels(playerController.PlayerModel, panelsContainer);
+                DrawBuffPanels(playerController.PlayerModel, panelsContainer);
+            }
+        }
+
+        private void DrawBuffPanels(PlayerModel playerModel, Transform panelsContainer)
+        {
+            foreach (Stat stat in playerModel.CollectStats()) {
+                AddPanel(stat.icon, stat.value, panelsContainer);
+            }
+        }
+
+        private void DrawStatPanels(PlayerModel playerModel, Transform panelsContainer)
+        {
+            foreach (Buff buff in playerModel.CollectBuffs()) {
+                AddPanel(buff.icon, 0, panelsContainer);
+            }
+        }
+
+        private void AddPanel(string icon, float value, Transform container)
+        {
+            StatPanelViewMediator statPanel = GameObject.Instantiate(_gameViewContext.StatPanel, container);
+            statPanel.IconName = icon;
+            statPanel.Value = value;
         }
 
         private void ResetRound()
         {
             RemovePlayerStatPanels();
-            RestorePlayerAnimations();
-        }
-
-        private void RestorePlayerAnimations()
-        {
-            
         }
 
         private void RemovePlayerStatPanels()
         {
-            
+            foreach (PlayerView playerView in _gameViewContext.PlayerViews) {
+                foreach (Transform child in playerView.PanelHierarchy.statsPanel) {
+                    GameObject.Destroy(child.gameObject);
+                }
+            }
         }
         
         public bool IsGameOver()

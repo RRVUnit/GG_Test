@@ -62,5 +62,15 @@ namespace Game
         {
             get { return _hp; }
         }
+
+        public Buff[] CollectBuffs()
+        {
+            return new Buff[0];
+        }
+
+        public Stat[] CollectStats()
+        {
+            return _initialStats;
+        }
     }
 }

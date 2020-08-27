@@ -46,7 +46,7 @@ namespace Game
 
         private void CreateTargetRoaming()
         {
-            _targetRoaming = new Vector3(Random.Range(-1f, 1f), 0,
+            _targetRoaming = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f),
                                          Random.Range(-1f, 1f));
             _targetRoaming *= CameraModel.roamingRadius;
         }

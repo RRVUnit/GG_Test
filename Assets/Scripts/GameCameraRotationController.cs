@@ -8,6 +8,8 @@ namespace Game
         private Camera _camera;
 
         public GameObject CameraAnchor;
+        public GameObject CameraContainerAnchor;
+        
         public CameraModel CameraModel;
         
         private float _rotationSpeed;
@@ -21,11 +23,38 @@ namespace Game
 
         public void Init()
         {
-            _rotationSpeed = 360 / CameraModel.roundDuration;
+            InitRotationRadius();
+            InitCameraHeight();
+            InitRotationSpeed();
+            InitFov();
+        }
 
+        private void InitFov()
+        {
             _camera.fieldOfView = CameraModel.fovMax;
             _zoomed = false;
             _fovChangeTime = Time.time;
+        }
+
+        private void InitRotationSpeed()
+        {
+            _rotationSpeed = 360 / CameraModel.roundDuration;
+        }
+
+        private void InitCameraHeight()
+        {
+            var cameraTransform = _camera.transform;
+            Vector3 cameraPosition = cameraTransform.position;
+            cameraPosition.y = CameraModel.height;
+            _camera.transform.SetPositionAndRotation(cameraPosition, cameraTransform.rotation);
+        }
+
+        private void InitRotationRadius()
+        {
+            Transform containerPosition = CameraContainerAnchor.transform;
+            Vector3 cameraContainerPosition = containerPosition.position;
+            cameraContainerPosition.x = CameraModel.roundRadius;
+            containerPosition.SetPositionAndRotation(cameraContainerPosition, containerPosition.rotation);
         }
 
         private void Update()

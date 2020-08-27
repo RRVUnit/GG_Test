@@ -26,6 +26,9 @@ namespace Game
         [SerializeField]
         public GameObject CameraAnchor;
         
+        [SerializeField]
+        public GameObject CameraContainerAnchor;
+        
         public PlayerView GetPlayerView(PlayerType playerType)
         {
             return PlayerViews.First(pw => pw.PlayerType == playerType);

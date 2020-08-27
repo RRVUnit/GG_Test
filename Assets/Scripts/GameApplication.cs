@@ -32,6 +32,7 @@ namespace Game
         {
             GameCameraRotationController rotationController = gameObject.AddComponent<GameCameraRotationController>();
             rotationController.CameraAnchor = _gameViewContext.CameraAnchor;
+            rotationController.CameraContainerAnchor = _gameViewContext.CameraContainerAnchor;
             rotationController.CameraModel = _dataConfig.cameraSettings;
             rotationController.Init();
         }

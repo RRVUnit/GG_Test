@@ -730,6 +730,7 @@ MonoBehaviour:
     type: 3}
   HealthContainer: {fileID: 209692073}
   CameraAnchor: {fileID: 871526791}
+  CameraContainerAnchor: {fileID: 1569737436}
 --- !u!1 &871526791
 GameObject:
   m_ObjectHideFlags: 0

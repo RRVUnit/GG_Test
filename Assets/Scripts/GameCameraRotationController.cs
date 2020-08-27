@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game
@@ -10,17 +11,21 @@ namespace Game
         public CameraModel CameraModel;
         
         private float _rotationSpeed;
+        private bool _zoomed;
+        private double _fovChangeTime;
 
         private void Awake()
         {
             _camera = Camera.main;
-
-            PrepareParams();
         }
 
-        private void PrepareParams()
+        public void Init()
         {
-            _rotationSpeed = 0.1f;
+            _rotationSpeed = 360 / CameraModel.roundDuration;
+
+            _camera.fieldOfView = CameraModel.fovMax;
+            _zoomed = false;
+            _fovChangeTime = Time.time;
         }
 
         private void Update()
@@ -32,8 +37,31 @@ namespace Game
         {
             Transform cameraAnchorTransform = CameraAnchor.transform;
             Vector3 newRotation = cameraAnchorTransform.rotation.eulerAngles;
-            newRotation.y += _rotationSpeed;
-            CameraAnchor.transform.SetPositionAndRotation(cameraAnchorTransform.position, Quaternion.Euler(newRotation));
+            newRotation.y += _rotationSpeed * Time.deltaTime;
+            Quaternion newRotationQuatenion = Quaternion.Euler(newRotation);
+            CameraAnchor.transform.SetPositionAndRotation(cameraAnchorTransform.position, newRotationQuatenion);
+            
+            _camera.transform.LookAt(new Vector3(0, CameraModel.lookAtHeight, 0));
+
+            if (CanChangeFov()) {
+                UpdateFOV();
+            }
+        }
+
+        private void UpdateFOV()
+        {
+            float targetFov = _zoomed ? CameraModel.fovMax : CameraModel.fovMin;
+            _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, targetFov, CameraModel.fovDuration);
+            
+            if (Math.Abs(_camera.fieldOfView - targetFov) < 0.1f) {
+                _zoomed = !_zoomed;
+                _fovChangeTime = Time.time;
+            }
+        }
+
+        private bool CanChangeFov()
+        {
+            return Time.time - _fovChangeTime > CameraModel.fovDelay;
         }
     }
 }

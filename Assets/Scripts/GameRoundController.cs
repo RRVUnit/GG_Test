@@ -15,6 +15,7 @@ namespace Game
         private readonly Dictionary<HealthBarViewMediator, GameObject> _healthBarToPlayerCharacters = new Dictionary<HealthBarViewMediator, GameObject>();
 
         private GameRoundUIController _gameRoundUIController;
+        private GameMath _gameMath;
         
         public GameRoundController(GameViewContext gameViewContext, Data dataConfig)
         {
@@ -25,6 +26,8 @@ namespace Game
             CreatePlayerControllers();
             CreatePlayerHealthBars();
             CreateGameRoundUIController();
+            
+            _gameMath = new GameMath();
         }
 
         private void CreateGameRoundUIController()
@@ -74,8 +77,13 @@ namespace Game
             
             playerController.Attack();
             
-            int hitAmount = CalculateHitAmount(playerController, enemyController);
+            int hitAmount = _gameMath.CalculateHitAmount(playerController, enemyController);
             enemyController.Hit(hitAmount);
+
+            int hpRestoreAmount = _gameMath.CalculateRestoreHPAmount(playerController, hitAmount);
+            if (hpRestoreAmount > 0) {
+                playerController.RestoreHealth(hpRestoreAmount);
+            }
         }
 
         private bool CanAttack()
@@ -86,11 +94,6 @@ namespace Game
         private bool GameStarted()
         {
             return _currentGameRoundModel != null;
-        }
-
-        private int CalculateHitAmount(PlayerController playerController, PlayerController enemyController)
-        {
-            return 10;
         }
 
         private PlayerController GetEnemyController(PlayerType playerType)
@@ -127,6 +130,7 @@ namespace Game
         {
             foreach (PlayerType playerType in _playerControllers.Keys) {
                 PlayerModel model = roundModel.GetPlayerByType(playerType);
+                model.Start();
                 GetPlayerController(playerType).PlayerModel = model;
             }
         }

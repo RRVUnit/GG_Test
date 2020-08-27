@@ -28,7 +28,7 @@ namespace Game
             if(!withBuffs)
                 return playerModel;
             List<Buff> buffs = CreateRandomPlayerBuffs(gameSettings);
-            buffs.ForEach(buff => playerModel.AddBuff(buff));
+            playerModel.AddBuffs(buffs.ToArray());
             return playerModel;
         }
 

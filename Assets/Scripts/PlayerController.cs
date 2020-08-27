@@ -97,11 +97,11 @@ namespace Game
 
         private void UpdateDefaultValuesFromModel()
         {
-            CreateHpRestoreLabel(_playerModel.HP);
+            CreateHpRestoreLabel(_playerModel.MaxHP);
 
             UpdateHealthAnimationParam();
 
-            HealthBar.MaxValue = _playerModel.HP;
+            HealthBar.MaxValue = _playerModel.MaxHP;
             
             UpdateHPPanel();
         }

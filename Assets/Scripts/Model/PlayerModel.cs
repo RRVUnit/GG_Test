@@ -15,42 +15,68 @@ namespace Game
         private readonly PlayerType _playerType;
         private readonly Stat[] _initialStats;
 
-        private List<Buff> _buffs = new List<Buff>();
+        private readonly List<Buff> _buffs = new List<Buff>();
 
-        private int _hp;
+        private int _currentHp;
         
         public PlayerModel(PlayerType playerType, Stat[] initialStats)
         {
             _playerType = playerType;
             _initialStats = initialStats;
-
-            _hp = CollectStat(StatsId.LIFE_ID);
         }
 
-        private int CollectStat(int statId)
+        public int CollectStat(int statId)
         {
             var result = (int) _initialStats.Where(s => s.id == statId).Sum(s => s.value);
+            _buffs.ForEach(b => {
+                result += (int) b.stats.Where(bs => bs.statId == statId).Sum(s => s.value);
+            });
             return result;
         }
 
-        public void AddBuff(Buff buff)
+        public void AddBuffs(Buff[] buffs)
         {
-            _buffs.Add(buff);
+            _buffs.AddRange(buffs);
+        }
+
+        public void Start()
+        {
+            _currentHp = MaxHP;
         }
 
         public void Hit(int hitAmount)
         {
-            _hp = Math.Max(0, _hp - hitAmount);
+            _currentHp = Math.Max(0, _currentHp - hitAmount);
         }
 
+        public int MaxHP
+        {
+            get { return CollectStat(StatsId.LIFE_ID); }
+        }
+        
+        public int Damage
+        {
+            get { return CollectStat(StatsId.DAMAGE_ID); }
+        }
+        
+        public int Armor
+        {
+            get { return CollectStat(StatsId.ARMOR_ID); }
+        }
+        
+        public int LifeSteal
+        {
+            get { return CollectStat(StatsId.LIFE_STEAL_ID); }
+        }
+        
         public void RestoreHealth(int hpAmount)
         {
-            _hp += hpAmount;
+            _currentHp += hpAmount;
         }
         
         public bool IsDead()
         {
-            return _hp <= 0;
+            return _currentHp <= 0;
         }
 
         public PlayerType PlayerType
@@ -60,7 +86,7 @@ namespace Game
 
         public int HP
         {
-            get { return _hp; }
+            get { return _currentHp; }
         }
 
         public Buff[] CollectBuffs()
@@ -70,7 +96,28 @@ namespace Game
 
         public Stat[] CollectStats()
         {
-            return _initialStats;
+            Stat[] result = new Stat[_initialStats.Length];
+            for (int i = 0; i < _initialStats.Length; i++) {
+                Stat initialStat = CloneStat(_initialStats[i]);
+                initialStat.value = CollectStat(initialStat.id);
+                result[i] = initialStat;
+            }
+            return result;
+        }
+
+        private Stat CloneStat(Stat stat)
+        {
+            return new Stat() {
+                    id = stat.id,
+                    title = stat.title,
+                    icon = stat.icon,
+                    value = stat.value
+            }; 
+        }
+
+        public bool HasStat(int statId)
+        {
+            return CollectStat(statId) > 0;
         }
     }
 }

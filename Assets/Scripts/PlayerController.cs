@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,13 +33,11 @@ namespace Game
             get { return _playerType; }
         }
 
-        public void Hit(int hitAmount)
+        public void Hit(float hitAmount)
         {
             PlayerModel.Hit(hitAmount);
             
-            Debug.Log(PlayerType + " HITTED: HP :" + PlayerModel.HP);
-            
-            CreateHitAmountLabel(hitAmount);
+            CreateHitAmountLabel(ToInt(hitAmount).ToString());
             UpdateHPPanel();
 
             if (PlayerModel.IsDead()) {
@@ -51,25 +50,25 @@ namespace Game
             PlayAttack();
         }
 
-        public void RestoreHealth(int hpAmount)
+        public void RestoreHealth(float hpAmount)
         {
             PlayerModel.RestoreHealth(hpAmount);
-            CreateHpRestoreLabel(hpAmount);
+            CreateHpRestoreLabel(ToInt(hpAmount).ToString());
             UpdateHPPanel();
         }
         
         private void UpdateHPPanel()
         {
-            HealthBar.Value = _playerModel.HP;
+            HealthBar.Value = HPToInt();
         }
 
-        private void CreateHitAmountLabel(int hitAmount)
+        private void CreateHitAmountLabel(string hitAmount)
         {
             Text hitText = HealthBar.CreateHitText(hitAmount);
             _healthBarEmitter.Add(hitText);
         }
         
-        private void CreateHpRestoreLabel(int hpAmount)
+        private void CreateHpRestoreLabel(string hpAmount)
         {
             Text hitText = HealthBar.CreateHPRestoreText(hpAmount);
             _healthBarEmitter.Add(hitText);
@@ -97,7 +96,7 @@ namespace Game
 
         private void UpdateDefaultValuesFromModel()
         {
-            CreateHpRestoreLabel(_playerModel.MaxHP);
+            CreateHpRestoreLabel(_playerModel.MaxHP.ToString());
 
             UpdateHealthAnimationParam();
 
@@ -108,7 +107,17 @@ namespace Game
 
         private void UpdateHealthAnimationParam()
         {
-            _playerAnimator.SetInteger(HEALTH, _playerModel.HP);
+            _playerAnimator.SetInteger(HEALTH, HPToInt());
+        }
+
+        private int HPToInt()
+        {
+            return ToInt(_playerModel.HP);
+        }
+
+        private int ToInt(float amount)
+        {
+            return (int) Math.Round(amount);
         }
 
         public void Tick()

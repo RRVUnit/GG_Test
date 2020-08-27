@@ -36,17 +36,17 @@ namespace Game
             Icon.fillAmount = iconFillAmount;
         }
 
-        public Text CreateHPRestoreText(int hpAmount)
+        public Text CreateHPRestoreText(string hpAmount)
         {
             return CreateTextEmitter(hpAmount, false);
         }
 
-        public Text CreateHitText(int hitAmount)
+        public Text CreateHitText(string hitAmount)
         {
             return CreateTextEmitter(hitAmount, true);
         }
         
-        private Text CreateTextEmitter(int amount, bool isNegative)
+        private Text CreateTextEmitter(string amount, bool isNegative)
         {
             Text textInstance = Instantiate(Text, transform.parent, true);
             string prefix = isNegative ? "-" : "+";

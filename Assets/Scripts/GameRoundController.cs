@@ -77,10 +77,10 @@ namespace Game
             
             playerController.Attack();
             
-            int hitAmount = _gameMath.CalculateHitAmount(playerController, enemyController);
+            float hitAmount = _gameMath.CalculateHitAmount(playerController, enemyController);
             enemyController.Hit(hitAmount);
 
-            int hpRestoreAmount = _gameMath.CalculateRestoreHPAmount(playerController, hitAmount);
+            float hpRestoreAmount = _gameMath.CalculateRestoreHPAmount(playerController, hitAmount);
             if (hpRestoreAmount > 0) {
                 playerController.RestoreHealth(hpRestoreAmount);
             }

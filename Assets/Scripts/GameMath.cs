@@ -4,23 +4,23 @@ namespace Game
 {
     public class GameMath
     {
-        public int CalculateHitAmount(PlayerController playerController, PlayerController enemyController)
+        public float CalculateHitAmount(PlayerController playerController, PlayerController enemyController)
         {
             int playerDamage = playerController.PlayerModel.Damage;
             int enemyArmor = enemyController.PlayerModel.Armor;
 
-            int blockedDamage = (int) Math.Round((float) playerDamage * enemyArmor / 100);
+            float blockedDamage = (float) Math.Round((float) playerDamage * enemyArmor / 100);
             return playerDamage - blockedDamage;
         }
 
-        public int CalculateRestoreHPAmount(PlayerController playerController, int hitAmount)
+        public float CalculateRestoreHPAmount(PlayerController playerController, float hitAmount)
         {
             PlayerModel playerModel = playerController.PlayerModel;
             int lifeSteal = playerModel.LifeSteal;
             if (lifeSteal == 0) {
                 return 0;
             }
-            return (int) Math.Round((float) hitAmount * lifeSteal / 100);
+            return (float) Math.Round(hitAmount * lifeSteal / 100);
         }
     }
 }

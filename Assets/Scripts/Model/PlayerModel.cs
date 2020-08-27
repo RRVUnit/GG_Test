@@ -17,7 +17,7 @@ namespace Game
 
         private readonly List<Buff> _buffs = new List<Buff>();
 
-        private int _currentHp;
+        private float _currentHp;
         
         public PlayerModel(PlayerType playerType, Stat[] initialStats)
         {
@@ -44,7 +44,7 @@ namespace Game
             _currentHp = MaxHP;
         }
 
-        public void Hit(int hitAmount)
+        public void Hit(float hitAmount)
         {
             _currentHp = Math.Max(0, _currentHp - hitAmount);
         }
@@ -69,7 +69,7 @@ namespace Game
             get { return CollectStat(StatsId.LIFE_STEAL_ID); }
         }
         
-        public void RestoreHealth(int hpAmount)
+        public void RestoreHealth(float hpAmount)
         {
             _currentHp += hpAmount;
         }
@@ -84,7 +84,7 @@ namespace Game
             get { return _playerType; }
         }
 
-        public int HP
+        public float HP
         {
             get { return _currentHp; }
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 
@@ -18,11 +19,33 @@ namespace Game
 
             CollectGameContext();
 
+            CreateGameControls();
+            
             CreateGameRoundController();
             
             StartDefaultGame();
+
+            CreateCameraRotationController();
         }
 
+        private void CreateCameraRotationController()
+        {
+            GameCameraRotationController rotationController = gameObject.AddComponent<GameCameraRotationController>();
+            rotationController.CameraAnchor = _gameViewContext.CameraAnchor;
+            rotationController.CameraModel = _dataConfig.cameraSettings;
+        }
+
+        private void CreateGameControls()
+        {
+            List<GameTypeControl> gameTypeControls = _gameViewContext.GameTypeControls;
+            gameTypeControls.ForEach(gc => gc.GameTypeButton.onClick.AddListener(() => { OnGameModeChanged(gc.GameType); }));
+        }
+
+        private void OnGameModeChanged(GameType gameType)
+        {
+            _gameRoundController.CreateRound(gameType);
+        }
+        
         private void CollectGameContext()
         {
             _gameViewContext = GetComponent<GameViewContext>();

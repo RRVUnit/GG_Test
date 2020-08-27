@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -12,15 +13,18 @@ namespace Game
         
         private PlayerType _playerType;
         private readonly Animator _playerAnimator;
-
         private PlayerModel _playerModel;
 
         public HealthBarViewMediator HealthBar;
+
+        private HealthBarEmitter _healthBarEmitter;
         
         public PlayerController(PlayerType playerType, Animator playerAnimator)
         {
             _playerType = playerType;
             _playerAnimator = playerAnimator;
+            
+            _healthBarEmitter = new HealthBarEmitter();
         }
 
         public PlayerType PlayerType
@@ -61,12 +65,14 @@ namespace Game
 
         private void CreateHitAmountLabel(int hitAmount)
         {
-            HealthBar.EmitHit(hitAmount);
+            Text hitText = HealthBar.CreateHitText(hitAmount);
+            _healthBarEmitter.Add(hitText);
         }
         
         private void CreateHpRestoreLabel(int hpAmount)
         {
-            HealthBar.EmitHPRestore(hpAmount);
+            Text hitText = HealthBar.CreateHPRestoreText(hpAmount);
+            _healthBarEmitter.Add(hitText);
         }
 
         private void PlayAttack()
@@ -103,6 +109,11 @@ namespace Game
         private void UpdateHealthAnimationParam()
         {
             _playerAnimator.SetInteger(HEALTH, _playerModel.HP);
+        }
+
+        public void Tick()
+        {
+            _healthBarEmitter.Tick();
         }
     }
 }

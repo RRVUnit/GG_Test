@@ -14,7 +14,12 @@ namespace Game
         private int _value;
         
         public int MaxValue { private get; set; }
-        
+
+        private void Awake()
+        {
+            Text.gameObject.SetActive(false);
+        }
+
         public int Value
         {
             private get { return _value; }
@@ -31,19 +36,25 @@ namespace Game
             Icon.fillAmount = iconFillAmount;
         }
 
-        public void EmitHPRestore(int hpAmount)
+        public Text CreateHPRestoreText(int hpAmount)
         {
-            EmitText(hpAmount, false);
+            return CreateTextEmitter(hpAmount, false);
         }
 
-        public void EmitHit(int hitAmount)
+        public Text CreateHitText(int hitAmount)
         {
-            EmitText(hitAmount, true);
+            return CreateTextEmitter(hitAmount, true);
         }
         
-        private void EmitText(int amount, bool isNegative)
+        private Text CreateTextEmitter(int amount, bool isNegative)
         {
-            
+            Text textInstance = Instantiate(Text, transform.parent, true);
+            string prefix = isNegative ? "-" : "+";
+            Color color = isNegative ? Color.red : Color.green;
+            textInstance.color = color;
+            textInstance.text = prefix + amount;
+            textInstance.gameObject.SetActive(true);
+            return textInstance;
         }
     }
 }

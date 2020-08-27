@@ -5,6 +5,9 @@ namespace Game
 {
     public class GameRoundUIController
     {
+        private const string STAT_PANEL_PREFIX = "stat_";
+        private const string BUFF_PANEL_PREFIX = "buff_";
+        
         private readonly GameViewContext _gameViewContext;
         private readonly Dictionary<PlayerType, PlayerController> _playerControllers;
 
@@ -33,24 +36,35 @@ namespace Game
                 }
             }
         }
+
+        public void UpdateHealthPanelValue(PlayerType playerType, string value)
+        {
+            PlayerView playerView = _gameViewContext.GetPlayerView(playerType);
+            Transform transform = playerView.PanelHierarchy.statsPanel.Find(STAT_PANEL_PREFIX + StatsId.LIFE_ID);
+            StatPanelViewMediator statPanel = transform.GetComponent<StatPanelViewMediator>();
+            statPanel.Value = value;
+        }
         
         private void DrawBuffPanels(PlayerModel playerModel, Transform panelsContainer)
         {
             foreach (Stat stat in playerModel.CollectStats()) {
-                AddPanel(stat.icon, stat.value.ToString(), panelsContainer);
+                string panelName = STAT_PANEL_PREFIX + stat.id;
+                AddPanel(panelName, stat.icon, stat.value.ToString(), panelsContainer);
             }
         }
 
         private void DrawStatPanels(PlayerModel playerModel, Transform panelsContainer)
         {
             foreach (Buff buff in playerModel.CollectBuffs()) {
-                AddPanel(buff.icon, buff.title, panelsContainer);
+                string panelName = BUFF_PANEL_PREFIX + buff.id;
+                AddPanel(panelName, buff.icon, buff.title, panelsContainer);
             }
         }
 
-        private void AddPanel(string icon, string value, Transform container)
+        private void AddPanel(string panelName, string icon, string value, Transform container)
         {
             StatPanelViewMediator statPanel = GameObject.Instantiate(_gameViewContext.StatPanel, container);
+            statPanel.name = panelName;
             statPanel.IconName = icon;
             statPanel.Value = value;
         }

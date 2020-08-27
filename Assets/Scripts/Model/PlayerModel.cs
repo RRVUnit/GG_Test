@@ -71,7 +71,7 @@ namespace Game
         
         public void RestoreHealth(float hpAmount)
         {
-            _currentHp += hpAmount;
+            _currentHp = Math.Min(MaxHP, _currentHp + hpAmount);
         }
         
         public bool IsDead()

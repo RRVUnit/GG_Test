@@ -80,10 +80,14 @@ namespace Game
             float hitAmount = _gameMath.CalculateHitAmount(playerController, enemyController);
             enemyController.Hit(hitAmount);
 
+            _gameRoundUIController.UpdateHealthPanelValue(enemyController.PlayerType, enemyController.PlayerModel.HP.ToString());
+            
             float hpRestoreAmount = _gameMath.CalculateRestoreHPAmount(playerController, hitAmount);
             if (hpRestoreAmount > 0) {
                 playerController.RestoreHealth(hpRestoreAmount);
             }
+            
+            _gameRoundUIController.UpdateHealthPanelValue(playerController.PlayerType, playerController.PlayerModel.HP.ToString());
         }
 
         private bool CanAttack()

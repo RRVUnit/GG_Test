@@ -11,19 +11,25 @@ namespace Game
 
         private GameRoundModel _currentGameRoundModel;
 
-        private Dictionary<PlayerType, PlayerController> _playerControllers = new Dictionary<PlayerType, PlayerController>();
-        
-        private Dictionary<HealthBarViewMediator, GameObject> _healthBarToPlayerCharacters = new Dictionary<HealthBarViewMediator, GameObject>();
+        private readonly Dictionary<PlayerType, PlayerController> _playerControllers = new Dictionary<PlayerType, PlayerController>();
+        private readonly Dictionary<HealthBarViewMediator, GameObject> _healthBarToPlayerCharacters = new Dictionary<HealthBarViewMediator, GameObject>();
 
+        private GameRoundUIController _gameRoundUIController;
+        
         public GameRoundController(GameViewContext gameViewContext, Data dataConfig)
         {
             _gameViewContext = gameViewContext;
             _dataConfig = dataConfig;
 
-            AddGameControls();
-            AddPlayerControls();
+            BindPlayerControls();
             CreatePlayerControllers();
             CreatePlayerHealthBars();
+            CreateGameRoundUIController();
+        }
+
+        private void CreateGameRoundUIController()
+        {
+            _gameRoundUIController = new GameRoundUIController(_gameViewContext, _playerControllers);
         }
 
         private void CreatePlayerControllers()
@@ -44,18 +50,7 @@ namespace Game
             return new PlayerController(playerView.PlayerType, playerView.PanelHierarchy.character);
         }
 
-        private void AddGameControls()
-        {
-            List<GameTypeControl> gameTypeControls = _gameViewContext.GameTypeControls;
-            gameTypeControls.ForEach(gc => gc.GameTypeButton.onClick.AddListener(() => { OnGameModeChanged(gc.GameType); }));
-        }
-
-        private void OnGameModeChanged(GameType gameType)
-        {
-            CreateRound(gameType);
-        }
-
-        private void AddPlayerControls()
+        private void BindPlayerControls()
         {
             List<PlayerView> playerViews = _gameViewContext.PlayerViews;
             playerViews.ForEach(BindControls);
@@ -115,7 +110,7 @@ namespace Game
 
             ResetRound();
             ApplyPlayerModelsToController(roundModel);
-            DrawPlayersPanels();
+            _gameRoundUIController.DrawPlayersPanels();
         }
 
         private void CreatePlayerHealthBars()
@@ -136,53 +131,12 @@ namespace Game
             }
         }
 
-        private void DrawPlayersPanels()
-        {
-            foreach (PlayerController playerController in _playerControllers.Values) {
-                PlayerType playerType = playerController.PlayerType;
-                PlayerView playerView = _gameViewContext.GetPlayerView(playerType);
-                Transform panelsContainer = playerView.PanelHierarchy.statsPanel;
-                DrawBuffPanels(playerController.PlayerModel, panelsContainer);
-                DrawStatPanels(playerController.PlayerModel, panelsContainer);
-            }
-        }
-
-        private void DrawBuffPanels(PlayerModel playerModel, Transform panelsContainer)
-        {
-            foreach (Stat stat in playerModel.CollectStats()) {
-                AddPanel(stat.icon, stat.value.ToString(), panelsContainer);
-            }
-        }
-
-        private void DrawStatPanels(PlayerModel playerModel, Transform panelsContainer)
-        {
-            foreach (Buff buff in playerModel.CollectBuffs()) {
-                AddPanel(buff.icon, buff.title, panelsContainer);
-            }
-        }
-
-        private void AddPanel(string icon, string value, Transform container)
-        {
-            StatPanelViewMediator statPanel = GameObject.Instantiate(_gameViewContext.StatPanel, container);
-            statPanel.IconName = icon;
-            statPanel.Value = value;
-        }
-
         private void ResetRound()
         {
-            RemovePlayerStatPanels();
-        }
-
-        private void RemovePlayerStatPanels()
-        {
-            foreach (PlayerView playerView in _gameViewContext.PlayerViews) {
-                foreach (Transform child in playerView.PanelHierarchy.statsPanel) {
-                    GameObject.Destroy(child.gameObject);
-                }
-            }
+            _gameRoundUIController.RemovePlayerStatPanels();
         }
         
-        public bool IsGameOver()
+        private bool IsGameOver()
         {
             return _playerControllers.Values.Any(p => p.PlayerModel.IsDead());
         }
@@ -190,6 +144,10 @@ namespace Game
         public void Tick()
         {
             UpdateHealthBarsPositions();
+
+            foreach (PlayerController playerController in _playerControllers.Values) {
+                playerController.Tick();
+            }
         }
 
         private void UpdateHealthBarsPositions()
@@ -202,14 +160,11 @@ namespace Game
         private void UpdateHealthBarPosition(HealthBarViewMediator healthBar, GameObject character)
         {
             Vector3 characterPosition = character.transform.position;
-            characterPosition.z += 4;
+            characterPosition.y += 3.5f;
 
             RectTransform healthBarRect = healthBar.GetComponent<RectTransform>();
- 
-            Vector2 ViewportPosition = Camera.main.WorldToViewportPoint(characterPosition);
-            
-            healthBarRect.anchorMin = ViewportPosition;
-            healthBarRect.anchorMax = ViewportPosition;
+            Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, characterPosition);
+            healthBarRect.anchoredPosition = screenPosition;
         }
     }
 }

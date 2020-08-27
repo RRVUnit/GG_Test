@@ -128,6 +128,7 @@ namespace Game
                 GetPlayerController(playerType).HealthBar = healthBar;
                 _healthBarToPlayerCharacters.Add(healthBar, playerObject);
             }
+            UpdateHealthBarsPositions();
         }
 
         private void ApplyPlayerModelsToController(GameRoundModel roundModel)

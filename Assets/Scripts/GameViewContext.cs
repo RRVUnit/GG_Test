@@ -22,6 +22,9 @@ namespace Game
         
         [SerializeField]
         public GameObject HealthContainer;
+
+        [SerializeField]
+        public GameObject CameraAnchor;
         
         public PlayerView GetPlayerView(PlayerType playerType)
         {

@@ -729,6 +729,7 @@ MonoBehaviour:
   HealthPanel: {fileID: 6776552567310994906, guid: 62c4624c182bca94e96863e926c37a5b,
     type: 3}
   HealthContainer: {fileID: 209692073}
+  CameraAnchor: {fileID: 871526791}
 --- !u!1 &871526791
 GameObject:
   m_ObjectHideFlags: 0

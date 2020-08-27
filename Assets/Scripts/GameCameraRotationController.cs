@@ -1,10 +1,13 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game
 {
     public class GameCameraRotationController : MonoBehaviour
     {
+        private const float ROAMING_SPEED = 0.1F;
+        
         private Camera _camera;
 
         public GameObject CameraAnchor;
@@ -15,6 +18,9 @@ namespace Game
         private float _rotationSpeed;
         private bool _zoomed;
         private double _fovChangeTime;
+
+        private Vector3 _targetRoaming;
+        private Vector3 _initAnchorPosition;
 
         private void Awake()
         {
@@ -27,6 +33,22 @@ namespace Game
             InitCameraHeight();
             InitRotationSpeed();
             InitFov();
+            
+            InitRoaming();
+        }
+
+        private void InitRoaming()
+        {
+            CreateTargetRoaming();
+            
+            _initAnchorPosition = CameraContainerAnchor.transform.localPosition;
+        }
+
+        private void CreateTargetRoaming()
+        {
+            _targetRoaming = new Vector3(Random.Range(-1f, 1f), 0,
+                                         Random.Range(-1f, 1f));
+            _targetRoaming *= CameraModel.roamingRadius;
         }
 
         private void InitFov()
@@ -59,7 +81,23 @@ namespace Game
 
         private void Update()
         {
+            UpdateRoaming();
+            
             RotateCamera();
+        }
+
+        private void UpdateRoaming()
+        {
+            Transform cameraAnchorTransform = CameraContainerAnchor.transform;
+            Vector3 position = cameraAnchorTransform.localPosition;
+            position.x = Mathf.Lerp(position.x, _initAnchorPosition.x + _targetRoaming.x, Time.deltaTime * CameraModel.roamingDuration * ROAMING_SPEED);
+            position.y = Mathf.Lerp(position.y, _initAnchorPosition.y + _targetRoaming.y, Time.deltaTime * CameraModel.roamingDuration * ROAMING_SPEED);
+            position.z = Mathf.Lerp(position.z, _initAnchorPosition.z + _targetRoaming.z, Time.deltaTime * CameraModel.roamingDuration * ROAMING_SPEED);
+            cameraAnchorTransform.localPosition = position;
+
+            if (Vector3.Distance(position, _initAnchorPosition + _targetRoaming) <= 0.1f) {
+                CreateTargetRoaming();
+            }
         }
 
         private void RotateCamera()
